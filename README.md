@@ -1,6 +1,4 @@
-## 🎓 Real-Time data pipelines with Apache Pulsar™ and Apache Cassandra™
-
-<img src="images/badge.png?raw=true" width="150" align="right" />
+## 🎓 
 
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/datastaxdevs/workshop-realtime-data-pipelines)
 [![License Apache2](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -22,6 +20,16 @@ Welcome to the *RealTime data pipeline with Apache Pulsar and Apache Cassandra**
   - [Objectives](#objectives)
   - [Frequently asked questions](#frequently-asked-questions)
   - [Materials for the Session](#materials-for-the-session)
+- **Solution Architecture**
+
+- **Storage in Cassandra**
+  - [Requirements and Data Model](#)
+  - [Real Time Data Access through APIs](#)
+  - [Web Application](#)
+
+
+
+
 - **Architecture Design**
   - [Architecture overview](#architecture-overview)
   - [Injector Component](#injector-component)
@@ -185,6 +193,26 @@ score given in the review.
 --- 
 
 # 🏁 Start Hands-on
+
+
+TMP INIALIZATION
+
+
+
+
+
+```
+astra db load track3 \
+   --dsbulk-config ./dsbulk-config.cfg \
+   -url https://www.kaggle.com/datasets/jiashenliu/515k-hotel-reviews-data-in-europe/download?datasetVersionNumber=1
+```
+
+(URL will be )
+```
+astra db load track3 \
+   -url ./reviews-dataset.csv \
+   --dsbulk-config ./dsbulk-config.cfg 
+```
 
 ## Setup - Initialize your environment
 

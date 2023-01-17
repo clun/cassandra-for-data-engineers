@@ -1,0 +1,43 @@
+configs:
+  verbose: false
+  batchSize: 3000
+  batchFlushTimeoutMs: 1000
+  tasks.max: 1
+  topics: rr-restaurant-anomalies
+  contactPoints:
+  loadBalancing.localDc:
+  port: 9042
+  cloud.secureConnectBundle: "__SCB__"
+  ignoreErrors: None
+  maxConcurrentRequests: 500
+  maxNumberOfRecordsInBatch: 32
+  queryExecutionTimeout: 30
+  connectionPoolLocalSize: 4
+  jmx: true
+  compression: None
+  auth:
+    provider: None
+    username: token
+    password: "__TOKEN__"
+    gssapi:
+      keyTab:
+      principal:
+      service: dse
+  topic:
+    rr-restaurant-anomalies:
+      trollsquad:
+        msg_rr_restaurant_anomalies:
+          mapping: 'user_id=value.user_id,idx=value.idx,r_score=value.r_score,tgt_name=value.tgt_name,tgt_id=value.tgt_id,r_text=value.r_text,detected_by=value.detected_by'
+          consistencyLevel: LOCAL_ONE
+          ttl: -1
+          ttlTimeUnit : SECONDS
+          timestampTimeUnit : MICROSECONDS
+          nullToUnset: true
+          deletesEnabled: true
+      codec:
+        locale: en_US
+        timeZone: UTC
+        timestamp: CQL_TIMESTAMP
+        date: ISO_LOCAL_DATE
+        time: ISO_LOCAL_TIME
+        unit: MILLISECONDS
