@@ -21,13 +21,20 @@ CREATE TABLE IF NOT EXISTS staging_hotel_reviews (
   PRIMARY KEY(uid)
 );
 
+CREATE TABLE IF NOT EXISTS users (
+  email            text,
+  firstname        text,
+  lastname         text,
+  hashed_password  text,
+  PRIMARY KEY((email))
+);
 
 CREATE TABLE IF NOT EXISTS hotels_by_city (
    country text,
    city text,
    hotel_name text,
    hotel_address text,
-   PRIMARY KEY ((country), city)
+   PRIMARY KEY ((country), city, hotel_name)
 );
 
 CREATE TABLE IF NOT EXISTS reviews_by_hotel (
