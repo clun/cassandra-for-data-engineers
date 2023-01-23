@@ -1,3 +1,19 @@
+```
+select country,city,count(hotel_name)as hotels FROM hotels_by_city GROUP BY country,city
+```
+
+```
+          Spain | Barcelona |    132
+        Austria |    Vienna |     81
+ United Kingdom |    London |    356
+         France |     Paris |    263
+    Netherlands | Amsterdam |     83
+          Italy |     Milan |     72
+
+
+```
+
+
 
 ```
 npm install create-react-app@5.0.1
