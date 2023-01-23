@@ -194,24 +194,14 @@ score given in the review.
 
 # 🏁 Start Hands-on
 
-
 TMP INIALIZATION
-
-
-
-
-
-```
-astra db load track3 \
-   --dsbulk-config ./dsbulk-config.cfg \
-   -url https://www.kaggle.com/datasets/jiashenliu/515k-hotel-reviews-data-in-europe/download?datasetVersionNumber=1
-```
 
 (URL will be )
 ```
 astra db load track3 \
    -url ./reviews-dataset.csv \
-   --dsbulk-config ./dsbulk-config.cfg 
+   --dsbulk-config ./dsbulk-config.cfg \
+   -maxErrors -1
 ```
 
 ## Setup - Initialize your environment

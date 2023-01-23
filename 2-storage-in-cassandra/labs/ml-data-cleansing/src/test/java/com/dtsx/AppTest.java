@@ -1,9 +1,12 @@
 package com.dtsx;
 
 import com.datastax.astra.sdk.AstraClient;
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.CqlSessionBuilder;
 import com.datastax.oss.driver.api.core.cql.*;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +15,22 @@ import java.util.List;
  * Unit test for simple App.
  */
 public class AppTest {
+
+    @Test
+    public void connect() {
+        try(CqlSession cqlSession = CqlSession.builder()
+                .withAuthCredentials("token", "AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b")
+                .withCloudSecureConnectBundle(Paths.get("/Users/cedricklunven/.astra/scb/scb_f861e773-ab1b-4313-bf3c-8a47412c9ecd_us-east1.zip"))
+                .withKeyspace("system")
+                .build()) {
+            System.out.println(cqlSession.getKeyspace().get());
+            //session.execute("")
+
+
+
+        }
+
+    }
 
     @Test
     public void rowTest() {
@@ -23,7 +42,7 @@ public class AppTest {
                 .enableCql()
                 .build()) {
 
-            astraClient.cqlSession().execute("SELECT * FROM "
+            //astraClient.cqlSession().execute("SELECT * from system.
 
         }
     }
@@ -42,14 +61,7 @@ public class AppTest {
                     "INSERT INTO hotels_by_city (country, city, hotel_name, hotel_address) " +
                     "VALUES (?,?,?,?)");
             int count =0;
-
-            for (Iterator<ColumnDefinition> it = rs.getColumnDefinitions().iterator(); it.hasNext(); ) {
-                ColumnDefinition cd = it.next();
-                cd.
-
-
-            }
-
+/*
             for(Row row : rs.all()) {
 
 
@@ -67,7 +79,7 @@ public class AppTest {
                             row.getString("hotel_name"),
                             row.getString("hotel_address")));
                 }
-            }
+            }*/
         }
 
     }
