@@ -25,10 +25,9 @@ const Hotels = () => {
     }, [])
 
     // Render
-    return <h2>Hotels </h2>
+    return <h2>. </h2>
     {hotels && (
         <div className="container">
-            hotels
           {Object.values(hotels).map((hotel) => (
             <li> {hotel.country} {hotel.city} </li>
           ))}
