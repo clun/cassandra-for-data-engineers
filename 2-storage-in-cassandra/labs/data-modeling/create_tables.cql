@@ -21,6 +21,63 @@ CREATE TABLE IF NOT EXISTS staging_hotel_reviews (
   PRIMARY KEY(uid)
 );
 
+
+/* 
+ * We need to keep track of the count to display in UI. 
+ * - We want all hotels in same partition to avoid full scan
+**/
+
+CREATE TABLE IF NOT EXISTS locations (
+   location_type text,
+   country text,
+   city text,
+   pitch text,
+   location_count counter,
+   PRIMARY KEY((location_type), country, city, pitch)
+);
+
+UPDATE locations SET location_count=location_count+72 
+WHERE location_type='hotels' 
+AND country='Italy' 
+AND city='Milan'
+AND pitch='capital of fashion and Opera';
+
+UPDATE locations SET location_count=location_count+132 
+WHERE location_type='hotels' 
+AND country='Spain' 
+AND city='Barcelona'
+AND pitch='Architecture, delicious cuisine, and lively atmosphere';
+
+UPDATE locations SET location_count=location_count+81 
+WHERE location_type='hotels' 
+AND country='Austria' 
+AND city='Vienna'
+AND pitch='Rich history and cultural heritage';
+
+UPDATE locations SET location_count=location_count+356 
+WHERE location_type='hotels' 
+AND country='United Kingdom'
+AND city='London'
+AND pitch='Vibrant with a bustling cosmopolitan atmosphere';
+
+UPDATE locations SET location_count=location_count+263 
+WHERE location_type='hotels' 
+AND country='France' 
+AND city='Paris'
+AND pitch='The romantic city';
+
+UPDATE locations SET location_count=location_count+83 
+WHERE location_type='hotels' 
+AND country='Netherlands' 
+AND city='Amsterdam'
+AND pitch='Canals, museums, and liberal culture';
+
+UPDATE locations SET location_count=location_count+0
+WHERE location_type='hotels' 
+AND country='U.S.A (CA)' 
+AND city='San Jose'
+AND pitch='Get Proficient with Cassandra';
+
 CREATE TABLE IF NOT EXISTS users (
   email            text,
   firstname        text,
@@ -28,6 +85,7 @@ CREATE TABLE IF NOT EXISTS users (
   hashed_password  text,
   PRIMARY KEY((email))
 );
+
 
 CREATE TABLE IF NOT EXISTS hotels_by_city (
    country text,

@@ -1,14 +1,20 @@
 import React from 'react';
-import { HashRouter, Route, Switch} from 'react-router-dom'
+import { HashRouter} from 'react-router-dom'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 import Header from "./components/Header"
 import Hotels from './components/Hotels';
 import SectionSlider from './components/SectionSlider';
 import SectionCarousel from './components/SectionCarousel';
 
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
 
+/**
+ * Main Application
+ */
 const App = () => {
+  
+
   return (
       <HashRouter>
         <Header />

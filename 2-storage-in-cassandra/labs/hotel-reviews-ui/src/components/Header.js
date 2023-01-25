@@ -2,21 +2,21 @@ import React from "react";
 
 const Header = () => {
     return (
-        <header class="header menu_fixed">
+        <header className="header menu_fixed">
 		<div id="preloader"><div data-loader="circle-side"></div></div>
 		<div id="logo">
 			<a href="index.html">
-				<img src="img/cassandra_summit_logo.svg" width="350" height="100" alt="" class="logo_normal" />
+				<img src="img/cassandra_summit_logo.svg" width="350" height="100" alt="" className="logo_normal" />
 			</a>
 		</div>
-		<a href="#menu" class="btn_mobile">
-			<div class="hamburger hamburger--spin" id="hamburger">
-				<div class="hamburger-box">
-					<div class="hamburger-inner"></div>
+		<a href="#menu" className="btn_mobile">
+			<div className="hamburger hamburger--spin" id="hamburger">
+				<div className="hamburger-box">
+					<div className="hamburger-inner"></div>
 				</div>
 			</div>
 		</a>
-		<nav id="menu" class="main-menu">
+		<nav id="menu" className="main-menu">
 			<ul>
 				<li><span><a href="#0">Agenda</a></span>
 					<ul>
@@ -34,7 +34,7 @@ const Header = () => {
 								<li><a href="#">Production</a></li>
 							</ul>
 						</li>
-						<li><a href="index-19.html">Beverage <strong class="badge text-bg-danger">Hot !</strong></a></li>
+						<li><a href="index-19.html">Beverage <strong className="badge text-bg-danger">Hot !</strong></a></li>
 						<li><a href="index-17.html">HouseKeeeping</a></li>
 					</ul>
 				</li>
