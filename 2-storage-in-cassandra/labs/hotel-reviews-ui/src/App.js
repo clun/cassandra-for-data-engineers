@@ -14,12 +14,11 @@ import SectionCarousel from './components/SectionCarousel';
  */
 const App = () => {
   
-
   return (
       <HashRouter>
         <Header />
         <SectionSlider />
-        <SectionCarousel />
+        <SectionCarousel city="Paris" country="France"/>
         <Hotels />
      </HashRouter>
   ) 

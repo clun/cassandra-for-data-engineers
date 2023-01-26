@@ -8,13 +8,13 @@
     <meta name="description" content="Cassandra Summit Track3">
     <meta name="author" content="Cedrick LUNVEN, Stefano LOTTINI">
     <title>Hotel Reviews Demos</title>
-	  <link rel="preconnect" href="https://fonts.gstatic.com">
+	  
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 	  <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/style.css" rel="stylesheet" />
 	  <link href="css/vendors.css" rel="stylesheet" />
     <link href="css/custom.css" rel="stylesheet" />
-    <link href="js/modernizr_slider.js" rel="stylesheet" />
   </head>
 
   <body>
@@ -24,12 +24,13 @@
     </div>
     <script src="js/common_scripts.js"></script>
     <script src="js/main.js"></script>
-	  <script src="js/validate.js"></script>
+	 
+
     <script defer src="js/jquery.flexslider.js"></script>
     <script>
-      $(window).on('load', function(){
-        'use strict';
-        $('#carousel_slider').flexslider({
+    function enableFlexSlider() {
+      'use strict';
+      $('#carousel_slider').flexslider({
           animation: "slide",
           controlNav: false,
           animationLoop: false,
@@ -41,14 +42,17 @@
         $('#slider').flexslider({
           animation: "fade",
           controlNav: false,
-          animationLoop: false,
-          slideshow: false,
+          animationLoop: true,
+          slideshow: true,
           sync: "#carousel_slider",
           start: function(slider) {
             $('body').removeClass('loading');
           }
         });
-      });
+        console.log("Enable Slider");
+    }
+
+      $(window).on('load', function(){  setTimeout(enableFlexSlider, 2000);  });
     </script>	
   </body>
 </html>

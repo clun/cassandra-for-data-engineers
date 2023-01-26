@@ -11,8 +11,8 @@ const SectionSlider = () => {
     // Retrieve locations from table 'locations'
     const fetchLocations = async () => {
         const resLocations = await axios.get('/.netlify/functions/getLocations')
-        console.log(resLocations.data)
         setLocations(resLocations.data)
+        console.log("Locations Loaded")
     }
 
     useEffect(() => {
@@ -25,7 +25,6 @@ const SectionSlider = () => {
                 <ul className="slides">
                     {locations && locations.map((location, index) => <SlideBig key={index} location={location} />)}
                 </ul>
-                <div id="icon_drag_mobile"></div>
             </div>
             <div id="carousel_slider_wp">
                 <div id="carousel_slider" className="flexslider">
@@ -34,15 +33,7 @@ const SectionSlider = () => {
                         {locations && locations.map((location, index) => <SlideSmall key={index} location={location} />)}
                     </ul>
                   </div>
-                    <ul className="flex-direction-nav">
-                    <li className="flex-nav-prev">
-                        <a className="flex-prev" href="#" tabIndex="-1"></a>
-                    </li>
-                    <li className="flex-nav-next">
-                        <a className="flex-next" href="#" tabIndex="-1">
-                        </a>
-                    </li>
-                </ul>
+                    
                 </div>
                 
             </div>

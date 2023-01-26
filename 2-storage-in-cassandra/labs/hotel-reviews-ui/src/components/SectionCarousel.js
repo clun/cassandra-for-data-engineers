@@ -1,16 +1,28 @@
 import { React, useEffect, useState } from "react"
+import axios from 'axios'
 
-const SectionCarousel = () => {
-    
+const SectionCarousel = ({city, country}) => {
+     // Store hotels for one location
+     const [hotels, setHotels] = useState(null)
+
+    // Retrieve locations from table 'locations'
+    const fetchLocationHotels = async () => {
+        const hotelHttpResponse = await axios.get('/.netlify/functions/getHotels?')
+        setHotels(hotelHttpResponse.data)
+        console.log("hotels Loaded")
+    }
+
     return (
-
+      
 <div className="container container-custom margin_80_0">
+    
+{country && (
     <div className="main_title_2">
         <span><em></em></span>
-        <h2>Popular hotels</h2>
-        <p>This is the top 3 hotels of the city</p>
+        <h2>Popular hotels {country}</h2>
+        <p>This is the top 3 hotels of the {city}</p>
     </div>
-
+)}
     <div className="isotope-wrapper">
         <div className="box_list isotope-item latest">
             <div className="row g-0">
@@ -108,7 +120,7 @@ const SectionCarousel = () => {
     <p className="btn_home_align"><a href="tours-grid-isotope.html" className="btn_1 rounded">View all</a></p>
     <hr className="large" />
 </div>
-        
+
 
     )
 }

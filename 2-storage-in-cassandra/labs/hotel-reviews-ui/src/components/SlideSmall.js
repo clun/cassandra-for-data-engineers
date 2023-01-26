@@ -7,7 +7,7 @@ const SlideSmall = ({ location }) => {
         marginRight: "25px",
         float: "left",
         display: "block"
-      };
+    };
 
     return (
         <li style={liStyle} >

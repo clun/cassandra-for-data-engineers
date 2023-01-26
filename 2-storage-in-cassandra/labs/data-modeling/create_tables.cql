@@ -75,7 +75,7 @@ AND pitch='Canals, museums, and liberal culture';
 UPDATE locations SET location_count=location_count+0
 WHERE location_type='hotels' 
 AND country='U.S.A (CA)' 
-AND city='San Jose'
+AND city='SanJose'
 AND pitch='Get Proficient with Cassandra';
 
 CREATE TABLE IF NOT EXISTS users (
