@@ -1,6 +1,6 @@
 import React from "react"
 
-const SlideBig = ({ location }) => {
+const SliderLocationBanner = ({ location }) => {
 
     const liStyle = {
         width: "100%",
@@ -26,4 +26,4 @@ const SlideBig = ({ location }) => {
     )
 }
 
-export default SlideBig
+export default SliderLocationBanner

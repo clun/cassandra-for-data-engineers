@@ -1,9 +1,9 @@
 import { React, useEffect, useState } from "react"
 import axios from 'axios'
-import SlideBig from "./SlideBig"
-import SlideSmall from "./SlideSmall"
+import SliderLocationBanner from "./SliderLocationBanner"
+import SliderLocationCard from "./SliderLocationCard"
 
-const SectionSlider = () => {
+const SliderLocations = () => {
 
     // Store locations
     const [locations, setLocations] = useState(null)
@@ -23,14 +23,14 @@ const SectionSlider = () => {
         <section className="slider">
             <div id="slider" className="flexslider">
                 <ul className="slides">
-                    {locations && locations.map((location, index) => <SlideBig key={index} location={location} />)}
+                    {locations && locations.map((location, index) => <SliderLocationBanner key={index} location={location} />)}
                 </ul>
             </div>
             <div id="carousel_slider_wp">
                 <div id="carousel_slider" className="flexslider">
                   <div className="flex-viewport" style={{overflow: "hidden", position: "relative"}}>
                     <ul className="slides"  style={{width: "1000%",transitionDuration: "0s",transform: "translate3d(0px, 0px, 0px)"}} >
-                        {locations && locations.map((location, index) => <SlideSmall key={index} location={location} />)}
+                        {locations && locations.map((location, index) => <SliderLocationCard key={index} location={location} />)}
                     </ul>
                   </div>
                     
@@ -41,4 +41,4 @@ const SectionSlider = () => {
     )
 }
 
-export default SectionSlider;
+export default SliderLocations;

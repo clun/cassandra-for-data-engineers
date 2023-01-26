@@ -17,23 +17,8 @@ import java.util.List;
 public class AppTest {
 
     @Test
-    public void connect() {
-        try(CqlSession cqlSession = CqlSession.builder()
-                .withAuthCredentials("token", "AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b")
-                .withCloudSecureConnectBundle(Paths.get("/Users/cedricklunven/.astra/scb/scb_f861e773-ab1b-4313-bf3c-8a47412c9ecd_us-east1.zip"))
-                .withKeyspace("system")
-                .build()) {
-            System.out.println(cqlSession.getKeyspace().get());
-            //session.execute("")
+    public void populateHotelPrices() {
 
-
-
-        }
-
-    }
-
-    @Test
-    public void rowTest() {
         try(AstraClient astraClient = AstraClient.builder()
                 .withToken("AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b")
                 .withCqlKeyspace("data_exploration")
@@ -42,30 +27,46 @@ public class AppTest {
                 .enableCql()
                 .build()) {
 
-            //astraClient.cqlSession().execute("SELECT * from system.
-
-        }
-    }
-    @Test
-    public void test() {
-        try(AstraClient astraClient = AstraClient.builder()
-                .withToken("AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b")
-                .withCqlKeyspace("data_exploration")
-                .withDatabaseId("f861e773-ab1b-4313-bf3c-8a47412c9ecd")
-                .withDatabaseRegion("us-east1")
-                .enableCql()
-                .build()) {
-
-            ResultSet rs = astraClient.cqlSession().execute("SELECT hotel_name,hotel_address FROM staging_hotel_reviews LIMIT 10000");
             PreparedStatement ps = astraClient.cqlSession().prepare("" +
-                    "INSERT INTO hotels_by_city (country, city, hotel_name, hotel_address) " +
-                    "VALUES (?,?,?,?)");
+                    "UPDATE hotels_by_city SET hotel_price = ? " +
+                    "WHERE country=? AND city=? AND rate=? AND hotel_name=?");
+
             int count =0;
-/*
+            ResultSet rs = astraClient.cqlSession().execute("SELECT * FROM hotels_by_city");
             for(Row row : rs.all()) {
+                int scale = (int) Math.pow(10, 1);
+                int price = Double.valueOf((Math.round(Math.random() * 400 * scale) / scale)).intValue();
 
+                count++;
+                if (count % 100 == 0) System.out.println(count);
+                astraClient.cqlSession().execute(ps.bind(price,
+                        row.getString("country"),
+                        row.getString("city"),
+                        row.getDouble("rate"),
+                        row.getString("hotel_name")));
+            }
+        }
+    }
 
+    @Test
+    public void populateHotelByCity() {
+        try(AstraClient astraClient = AstraClient.builder()
+                .withToken("AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b")
+                .withCqlKeyspace("data_exploration")
+                .withDatabaseId("f861e773-ab1b-4313-bf3c-8a47412c9ecd")
+                .withDatabaseRegion("us-east1")
+                .enableCql()
+                .build()) {
 
+            PreparedStatement ps = astraClient.cqlSession().prepare("" +
+                    "INSERT INTO hotels_by_city (country, city, rate, hotel_name, hotel_address) " +
+                    "VALUES (?,?,?,?,?)");
+
+            // Get 10000 of records
+            ResultSet rs = astraClient.cqlSession().execute("SELECT hotel_name,hotel_address FROM staging_hotel_reviews LIMIT 10000");
+
+            int count =0;
+            for(Row row : rs.all()) {
                 List<String> address = Arrays.asList(row.getString("hotel_address").split(" "));
                  if (address.size() > 4) {
                     String country = address.get(address.size()-1);
@@ -74,12 +75,18 @@ public class AppTest {
                         country = address.get(address.size()-2) + " " + country;
                         city = "London";
                     }
+                    count++;
                     if (count % 100 == 0) System.out.println(count);
+
+
+                     int scale = (int) Math.pow(10, 1);
+                     double rate = (double) Math.round(Math.random() * 5 * scale) / scale;
                     astraClient.cqlSession().execute(ps.bind(country, city,
+                            rate,
                             row.getString("hotel_name"),
                             row.getString("hotel_address")));
                 }
-            }*/
+            }
         }
 
     }

@@ -1,6 +1,6 @@
 import React from "react"
 
-const SlideSmall = ({ location }) => {
+const SliderLocationCard = ({ location }) => {
 
     const liStyle = {
         width: "280px",
@@ -20,4 +20,4 @@ const SlideSmall = ({ location }) => {
     )
 }
 
-export default SlideSmall
+export default SliderLocationCard
