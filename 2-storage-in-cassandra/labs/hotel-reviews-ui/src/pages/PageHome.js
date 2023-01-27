@@ -1,17 +1,26 @@
-import React from 'react';
-import { HashRouter} from 'react-router-dom'
-import Header from "../components/Header"
+import {React, useState} from 'react';
 import SliderLocations from '../components/slider/SliderLocations';
-import LocationHotelsList from '../components/hotels/LocationHotelsList';
+import HotelsList from '../components/hotels/HotelsList';
+
+import { SelectedLocationContext } from '../contexts/SelectedLocationContext';
 
 /**
  * Main Application
  */
 const PageHome = () => {
+
+  // Initialization block Botton
+  const [selectedLocation, setSelectedLocation] = useState(
+    {city:"Vienna", country:"Austria", size:5}
+  );
+ 
+  // Sharing the selected location to both components to update
   return (
      <>
-        <SliderLocations />
-        <LocationHotelsList city="Paris" country="France" size="5" />
+        <SelectedLocationContext.Provider value={{selectedLocation, setSelectedLocation}} >
+            <SliderLocations />
+            <HotelsList />
+        </SelectedLocationContext.Provider>
     </>
   ) 
 };

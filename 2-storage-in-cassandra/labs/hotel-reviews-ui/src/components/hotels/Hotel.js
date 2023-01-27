@@ -2,18 +2,20 @@ import { useEffect, useState } from "react"
 import { Link } from 'react-router-dom'
 import RatingStars from "../ui/RatingStars"
 
+/**
+ * Render one hotel in the hotel list.
+ */
 const Hotel = ({ hotel, city }) => {
  
-  let hotel_thumbnail=hotel.hotel_thumbnail
-  let hotel_price=hotel.hotel_price
-
-  if (hotel_thumbnail === null) {
-    hotel_thumbnail='img/home/' + city + '_big.jpeg'
-  }
-  if (hotel_price === null) {
-    hotel_price=500
-  }
-
+  /**
+   * Accessing thumbnail or default
+   */
+  const hotel_thumbnail= (hotel.hotel_thumbnail === null) ? 'img/home/' + city + '_big.jpeg' : hotel.hotel_thumbnail;
+  const hotel_price= (hotel.hotel_price === null) ? 500 : hotel.hotel_price;
+  
+  /**
+   * Render an hotel
+   */
   return (
     <div className="box_list isotope-item popular">
     <div className="row g-0">

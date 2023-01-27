@@ -3,27 +3,41 @@ import axios from 'axios'
 import SliderLocationBanner from "./SliderLocationBanner"
 import SliderLocationCard from "./SliderLocationCard"
 
+/**
+ * Render top part of home screen with:
+ *  - slider of cards
+ *  - banner on selected card
+ */
 const SliderLocations = () => {
 
-    // Store locations
+    /**
+     * Hook to store locations coming from DB
+     */
     const [locations, setLocations] = useState(null)
 
-    // Retrieve locations from table 'locations'
+    /**
+     * DB access to populate the state
+     */
     const fetchLocations = async () => {
         const resLocations = await axios.get('/.netlify/functions/getLocations')
         setLocations(resLocations.data)
-        console.log("Locations Loaded")
     }
 
+    /**
+     * Look for location at initialization and will not change
+     */
     useEffect(() => {
         fetchLocations()
     }, [])
 
+    /**
+     * Render top page
+     */
     return (
         <section className="slider">
             <div id="slider" className="flexslider">
                 <ul className="slides">
-                    {locations && locations.map((location, index) => <SliderLocationBanner key={index} location={location} />)}
+                    {locations && locations.map((location, index) => <SliderLocationBanner key={index} location={location}/>)}
                 </ul>
             </div>
             <div id="carousel_slider_wp">
