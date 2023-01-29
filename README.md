@@ -1,12 +1,13 @@
 ## 🎓 
 
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/datastaxdevs/workshop-realtime-data-pipelines)
+
 [![License Apache2](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Discord](https://img.shields.io/discord/685554030159593522)](https://discord.com/widget?id=685554030159593522&theme=dark)
 
-Welcome to the *RealTime data pipeline with Apache Pulsar and Apache Cassandra** workshop! In this two-hour workshop, we will show you a sample architecture making use of Apache Pulsar™ and Pulsar Functions for real-time, event-streaming-based data ingestion, cleaning and processing.
+Introductory text
 
-⏲️ **Duration :** 2 hours
+⏲️ **Duration :** 8 hours
 
 🎓 **Level** Beginner to Intermediate
 
@@ -29,28 +30,13 @@ Welcome to the *RealTime data pipeline with Apache Pulsar and Apache Cassandra**
 
 
 
-
-- **Architecture Design**
-  - [Architecture overview](#architecture-overview)
-  - [Injector Component](#injector-component)
-  - [Analyzer Component](#analyzer-component)
-- [Setup - Initialize your environment](#setup---initialize-your-environment)
-- [LAB1 - Producer and Consumer](#lab1---producer-and-consumer)
-- [LAB2 - Pulsar functions](#lab2---pulsar-functions)
-- [LAB3 - Working with Database](#lab3---working-with-databases)
-- [LAB4 - Pulsar I/O](#lab4---pulsar-io)
-- [Homework](#Homework)
-<p>
-
 ## Objectives
 
-- 🎯 Give you an understanding and how and where to position Apache Pulsar
+- 🎯 As an architect understand the end-to-end process to design a real-time application including a system of record, a message broker and some machine learning.
 
-- 🎯 Give an overview of  streaming and datascience ecosystem**
+- 🎯 For data engineers how to build and deploy an AI model from a dataset
 
-- 🎯 Give you an understanding of Apache Cassandra NoSQL Database
-
-- 🎯 Create your first pipeline with streaming and database.
+- 🎯 For architects and developers how to build an efficient data model application on trop of Cassandra
 
 - 🚀 Have fun with an interactive session
 
@@ -82,22 +68,10 @@ In this readme, we try to provide instructions for local development as well - b
 </p>
 </details>
 <p/>
-<details>
-<summary><b> 3️⃣ Do I need to pay for anything for this workshop?</b></summary>
-<hr>
-<b>No.</b> All tools and services we provide here are FREE. FREE not only during the session but also after.
-</details>
-<p/>
-<details>
-<summary><b> 4️⃣ Will I get a certificate if I attend this workshop?</b></summary>
-<hr>
-Attending the session is not enough. You need to complete the homework detailed below and you will get a nice badge that you can share on linkedin or anywhere else *(open badge specification)*
-</details>
-<p/>
 
 ## Materials for the session
 
-It doesn't matter if you join our workshop live or you prefer to work at your own pace,
+It doesn't matter if you join our training day live or you prefer to work at your own pace,
 we have you covered. In this repository, you'll find everything you need for this workshop:
 
 - [Slide deck](/slides/slides.pdf)
@@ -105,127 +79,43 @@ we have you covered. In this repository, you'll find everything you need for thi
 - [Questions and Answers](https://community.datastax.com/)
 - [Twitch backup](https://www.twitch.tv/datastaxdevs)
 
-## Architecture Design
-
-_Reviews of various venues (hotels/restaurants), written by various users, keep pouring in. We need a way to clean, normalize and filter them, removing trolls and flagging blatant outlier reviews, and make the running results available to the end user._
-
-#### Architecture overview
-
-<img src="./images/current_arch.png"/>
-
-<details>
-<summary><b> Show Detailed explanations</b></summary>
-
-<ul>
-<li>A stream of "events" (messages), some of which are reviews, is poured into a Pulsar topic for "raw reviews".
-<li>A Pulsar function filters out malformed items and those that do not specify their target type (restaurant/hotel). This function takes care of normalizing the incoming reviews, since - as is often the case in real life - certain field names in the incoming reviews can have multiple forms. All reviews are encoded as JSON strings. The Pulsar function singles out hotel and restaurant reviews and routes them, after normalizing their structure, to two specific topics. 
-<li>We happen to be interested in restaurants, so we have a long-running process ("analyzer") performing the actual analysis on these. Heavy artillery, such as AI/ML-based classifiers, code with fat dependencies and the like, would be placed here (i.e outside Pulsar).
-
-<li>The analyzer keeps listening to the restaurant topic and ingests all incoming reviews: it keeps and update a state with key information, such as a rolling average score per each restaurant.
-
-<li>As new items arrive, they are checked if they are "troll reviews" (review text in heavy disagreement with the numeric score) and, if so, discarded. Otherwise they enter the rolling average for the target restaurant.
-
-<li>The analyzer periodically publishes an assessment for users and restaurants to a database, ready to be queried by any service that may need this data. (The output can also go to console if so desired). The destination DB also offers a ready-to-use REST API that allows to retrieve its data with simple HTTP requests, making it easy to build panels and UIs on top of this pipeline. The analyzer also reroutes "outlier reviews" (scores much different than the current rolling average) to another Pulsar topic, for a hypothetical manual inspection of such outliers.
-</ul>
-</p>
-</details>
-
-#### Injector Component
-
-<img src="./images/plots/02_reviews.png"  width="600px" />
-
-<details>
-<summary><b> Show Details</b></summary>
-<p>
-There is a pseudorandom procedure to generate reviews with features that fluctuate in a predictable
-way: it is all in the <b>revGenerator</b> directory.
-
-There is no "time" in the generation: to keep things simple, we use a "sequence index" in place of
-time. Also, some of the "reviews" are not even valid JSON strings but contain gibberish instead,
-as is often the case in real-life data ingestion pipelines!
-
-Each time a review is created, a venue (target) and a user (reviewer) are chosen at random: then,
-score and text are also created according to the following rules:
-
-Each venue has a "true" quality that is slowly oscillating in time, see for example these two restaurants:
-
-<img src="./images/plots/01_real-values.png"  width="600px" />
-
-Each reviewer has an associate amplitude that dictates how widely the scores they produce
-may fluctuate away from the "true" value for that venue at that "time": in this example, the individual
-scores emitted by two different reviewers, having a large and small associated amplitude, are plotted:
-
-
-<img src="./images/plots/02_reviews.png"  width="600px" />
-
-While reviews by Rita will presumably all fall in the "expected" region around the current average,
-a large fraction of the reviews by Anne will be too far away from
-it and thus be flagged as "outlier reviews".
-
-Each review comes with an associated text, which in this toy
-example is simply a bunch of words strung together, some positive ("delicious") and some negative ("disgusting").
-Each reviewer, however, has a Boolean "trolliness" flag: if true, then this text is built in strong
-disagreement with the numeric score in the review.
-</p>
-</details>
-
-#### Analyzer Component
-
-<img src="./images/plots/03_moving-average.png" width="600px"/>
-
-<details>
-<summary><b> Show Details</b></summary>
-<p>
-On the <b>analyzer side</b>, the reconstructed rolling average roughly follows the "true" quality for
-a venue, and is used to detect "outliers": each review that differs too much from the current rolling
-average is deemed an outlier. Here the rolling average corresponding to the above restaurant is plotted:
-
-<img src="./images/plots/03_moving-average.png"  width="600px"/>
-
-The analyzer also discards troll reviews and keeps a running 
-counter of them, both per-user and per-restaurant, ready to be exposed with the other data. To do so, a toy version of a sentiment analysis is implemented (simply based on some words with positive
-and negative connotation) and used to compare with the numeric
-score given in the review.
-
-</p>
-</details>
-
---- 
 
 # 🏁 Start Hands-on
 
-TMP INIALIZATION
-
-(URL will be )
-```
-astra db load track3 \
-   -url ./reviews-dataset.csv \
-   --dsbulk-config ./dsbulk-config.cfg \
-   -maxErrors -1
-```
 
 ## Setup - Initialize your environment
 
 #### `✅.setup-01`- Open Gitpod
 
-Gitpod is an IDE based on VSCode deployed in the cloud.
+<details>
+<summary><b> Learn more about gitpod</b></summary>
+<hr>
+<li>Gitpod is an IDE based on VSCode deployed in the cloud.
+</ul>
+</p>
+</details>
 
 
 > ↗️ _Right Click and select open as a new Tab..._
 
-<a href="https://gitpod.io/#https://github.com/datastaxdevs/workshop-realtime-data-pipelines"><img src="https://dabuttonfactory.com/button.png?t=Open+Gitpod&f=Open+Sans-Bold&ts=16&tc=fff&hp=20&vp=10&c=11&bgt=unicolored&bgc=0b5394" /></a>
+<a href="https://github.com/DataStax-Academy/cassandra-for-data-engineers">
+  <img src="https://dabuttonfactory.com/button.png?t=Start+Your+Gitpod+IDE&f=Open+Sans-Bold&ts=16&tc=fff&hp=20&vp=10&c=11&bgt=unicolored&bgc=0b5394" />
+</a>
 
-#### `✅.setup-02`- Create your Astra Account: Following web page opened by gitpod or follow this link
+#### `✅.setup-02`- Create your Astra Account
 
-_**`ASTRA`** is the simplest way to run both Cassandra and Pulsar with zero operations at all - just push the button and get your clusters. No credit card required_
+<details>
+<summary><b> Learn more about Astra</b></summary>
+ASTRA is the simplest way to run both Cassandra and Pulsar with zero operations at all - just push the button and get your clusters. No credit card required.
+</ul>
+</p>
+</details>
 
 Leveraging [Database creation guide](https://awesome-astra.github.io/docs/pages/astra/create-instance/#c-procedure) create a database. *Right-Click the button* with *Open in a new TAB.*
 
 The Astra registration page should have opened with Gitpod, if not use [this link](https://astra.dev/yt-9-14).
 
 #### `✅.setup-03`- Create Astra Credentials (token): Create an application token by following <a href="https://awesome-astra.github.io/docs/pages/astra/create-token/" target="_blank">these instructions</a>. 
-
-Skip this step is you already have a token. You can reuse the same token in our other workshops, too.
 
 > Your token should look like: `AstraCS:....`
 
@@ -237,16 +127,35 @@ Skip this step is you already have a token. You can reuse the same token in our 
 
 #### `✅.setup-04`- Setup Astra CLI
 
-Go back to your gitpod terminal waiting for your token. Make sure you select the `1_producer` shell in the bottom-right panel and provide the value where it is asked.
+> Information: More information on the Astra Cli in the [reference documentation](https://awesome-astra.github.io/docs/pages/astra/astra-cli/)
 
-![pic](images/pic-astratoken.png)
+- Open a new terminal and enter the following command paste your token when asked.
+
+```
+astra setup
+```
 
 > 🖥️ `setup-04 output`
 >
 > ```
+>     _____            __                
+>    /  _  \   _______/  |_____________   
+>   /  /_\  \ /  ___/\   __\_  __ \__  \ 
+>  /    |    \\___ \  |  |  |  | \// __ \_
+> \____|__  /____  > |__|  |__|  (____  /
+>          \/     \/                   \/
+> 
+>         ------------------------
+>         ---       SETUP      ---
+>         ------------------------
+> 
+> 🔑 Enter token (starting with AstraCS...):
+>
 > [cedrick.lunven@gmail.com]
 > ASTRA_DB_APPLICATION_TOKEN=AstraCS:AAAAAAAA
-> 
+```
+
+```
 > [What's NEXT ?]
 > You are all set.(configuration is stored in ~/.astrarc) You can now:
 >    • Use any command, 'astra help' will get you the list
@@ -272,18 +181,18 @@ astra user list
 > +--------------------------------------+-----------------------------+---------------------+
 > ```
 
-#### `✅.setup-06`- Create database `workshops` and keyspace `trollsquad` if they do not exist:
+#### `✅.setup-06`- Create database `data_engineer` and keyspace `booking` if they do not exist:
 
 ```bash
-astra db create workshops -k trollsquad --if-not-exist --wait
+astra db create data_engineer -k booking --if-not-exist --wait
 ```
 
 Let's analyze the command:
 | Chunk         | Description     |
 |--------------|-----------|
 | `db create` | Operation executed `create` in group `db`  |
-| `workshops` | Name of the database, our argument |
-|`-k trollsquad` | Name of the keyspace, a db can contains multiple keyspaces |
+| `data_engineer` | Name of the database, our argument |
+|`-k booking` | Name of the keyspace, a db can contains multiple keyspaces |
 | `--if-not-exist` | Flag for itempotency creating only what if needed |
 | `--wait` | Make the command blocking until all expected operations are executed (timeout is 180s) |
 
@@ -292,27 +201,27 @@ Let's analyze the command:
 > 🖥️ `setup-06 output`
 >
 > ```
-> [ INFO ] - Database 'workshops' already exist. Connecting to database.
-> [ INFO ] - Database 'workshops' has status 'MAINTENANCE' waiting to be 'ACTIVE' ...
->[ INFO ] - Database 'workshops' has status 'ACTIVE' (took 7983 millis)
+> [ INFO ] - Database 'data_engineer' already exist. Connecting to database.
+> [ INFO ] - Database 'data_engineer' has status 'MAINTENANCE' waiting to be 'ACTIVE' ...
+>[ INFO ] - Database 'data_engineer' has status 'ACTIVE' (took 7983 millis)
 > ```
 
-#### `✅.setup-07`- Check the status of database `workshops`
+#### `✅.setup-07`- Check the status of database `data_engineer`
 
 ```bash
-astra db status workshops
+astra db status data_engineer
 ```
 
 > 🖥️ `setup-07 output`
 >
 > ```
-> [ INFO ] - Database 'workshops' has status 'ACTIVE'
+> [ INFO ] - Database 'data_engineer' has status 'ACTIVE'
 > ```
 
 #### `✅.setup-08`- Get the informations for your database including the keyspace list
 
 ```bash
-astra db get workshops
+astra db get data_engineer
 ```
 
 > 🖥️ `setup-08 output`
@@ -321,7 +230,7 @@ astra db get workshops
 > +------------------------+-----------------------------------------+
 > | Attribute              | Value                                   |
 > +------------------------+-----------------------------------------+
-> | Name                   | workshops                               |
+> | Name                   | data_engineer                           |
 > | id                     | bb61cfd6-2702-4b19-97b6-3b89a04c9be7    |
 > | Status                 | ACTIVE                                  |
 > | Default Cloud Provider | AWS                                     |
@@ -329,7 +238,7 @@ astra db get workshops
 > | Default Keyspace       | trollsquad                              |
 > | Creation Time          | 2022-08-29T06:13:06Z                    |
 > |                        |                                         |
-> | Keyspaces              | [0] trollsquad                          |
+> | Keyspaces              | [0] booking                             |
 > |                        |                                         |
 > |                        |                                         |
 > | Regions                | [0] us-east-1                           |
@@ -339,7 +248,106 @@ astra db get workshops
 
 *Congratulations your environment is all set, let's start the labs !*
 
-## LAB1 - Producer and Consumer
+
+
+## LAB 1 - System of record
+
+- Create the data model for system of record
+
+```sql
+CREATE TABLE IF NOT EXISTS locations (
+   location_type text,
+   country text,
+   city text,
+   pitch text,
+   hotel_count counter,
+   PRIMARY KEY((location_type), country, city, pitch)
+);
+
+CREATE TABLE IF NOT EXISTS hotels_by_location (
+   country            text,
+   city               text,
+   uid                uuid,
+   name               text,
+   price              int,
+   address            text,
+   thumbnail          text,
+   avg_rate           double,
+   review_count       int,
+   days_since_review  int,
+   PRIMARY KEY ((country), city, uid)
+) WITH CLUSTERING ORDER BY (city ASC, rate DESC, uid ASC);
+
+CREATE TABLE IF NOT EXISTS hotel_details (
+   uid        uuid,
+   name       text,
+   country    text,
+   city       text,
+   price      int,
+   address    text,
+   thumbnail  text,
+   longitude  double,
+   latitude   double,
+   avg_rate   double,
+   PRIMARY KEY ((uuid));
+)
+
+CREATE TABLE IF NOT EXISTS reviews_by_hotel (
+   hotel_uid                   uuid,
+   review_uid                  timeuuid,
+   review_date                 date,
+   additional_scoring          double,
+   negative_review             text,
+   negative_review_words       int,
+   positive_review             text,
+   positive_review_words       int,
+   reviewer_nationality        text,
+   reviewer_score              double,
+   reviewer_reviews_count      double,                      
+   PRIMARY KEY ((hotel_uid), review_uid)
+) WITH CLUSTERING ORDER BY (review_uid DESC);
+```
+
+Learn about the data model 
+| Table         | Description     |
+|--------------|-----------|
+| `locations` | Slider  |
+| `hotels_by_location` | botton of page |
+
+
+```
+astra db cqlsh data_engineer -f ./2-storage-in-cassandra/datamodeling/create_table.cql
+```
+
+- Import reference Data data with CQL
+
+```
+astra db cqlsh data_engineer -f ./2-storage-in-cassandra/datamodeling/import_reference_data.cql
+```
+
+- Import  Data with DSBulk
+
+```
+astra db load data_engineer -k booking -t hotels_by_location -url hotels_by_location.csv
+```
+
+```
+astra db load data_engineer -k booking -t hotel_details -url hotel_details.csv
+```
+
+```
+astra db load data_engineer -k booking -t reviews_by_hotel -url reviews_by_hotel.csv
+```
+
+- Create env file
+
+```
+cd .... UI APP
+astra db create-dotenv data_engineer -k booking 
+```
+
+
+## LAB2 - Producer and Consumer
 
 
 #### `✅.lab1-01`- Generate an unique tenant name

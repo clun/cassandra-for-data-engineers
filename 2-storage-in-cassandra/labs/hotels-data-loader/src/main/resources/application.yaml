@@ -1,0 +1,5 @@
+astra:
+  token: AstraCS:RSgxJhDafxyQxYZtEwnUPYzU:847c6f5e4150261beed6cf01568283a9a25c29e2ea5c9ed51672e48b15e6951b
+  database-id: f861e773-ab1b-4313-bf3c-8a47412c9ecd
+  database-region: us-east1
+  keyspace: data_exploration

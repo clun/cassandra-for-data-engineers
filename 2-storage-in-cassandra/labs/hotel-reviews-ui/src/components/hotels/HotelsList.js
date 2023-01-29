@@ -25,7 +25,7 @@ const HotelsList = () => {
      */
     const fetchLocationHotels = async () => {
         let size = (selectedLocation.size === undefined) ? 5 : selectedLocation.size;
-        const hotelHttpResponse = await axios.get('/.netlify/functions/getHotelsList?'
+        const hotelHttpResponse = await axios.get('/.netlify/functions/getHotelsByLocation?'
          + 'country=' + selectedLocation.country 
          + '&city=' + selectedLocation.city 
          + '&size=' + size);
@@ -53,7 +53,7 @@ const HotelsList = () => {
             </div>
 
             <div className="isotope-wrapper">
-                {hotels && hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} city={selectedLocation.city}/>)}
+                {hotels && hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} />)}
             </div>
             <p className="btn_home_align"><a href="tours-grid-isotope.html" className="btn_1 rounded">View all</a></p>
             <hr className="large" />

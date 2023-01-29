@@ -20,12 +20,11 @@ exports.handler = async (event, context) => {
   try {
     res = await client.get('/api/rest/v2/keyspaces/' 
         + process.env.ASTRA_DB_KEYSPACE 
-        + '/hotels_by_city?where='
+        + '/hotels_by_location?where='
         + '\{"country":\{"$eq":"' + queryParameters.country + '"\}, '
         + '"city":\{"$eq":"' 
         + queryParameters.city + '"\}\}'
-        + '&page-size=' + pageSize
-        + '&fields=hotel_name,hotel_address,hotel_thumbnail,rate,hotel_price')
+        + '&page-size=' + pageSize)
     const locations = Object.keys(res.data).map((item) => res.data[item]);
     return {
       headers: '{Content-Type: application/json}',
