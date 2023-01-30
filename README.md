@@ -33,11 +33,11 @@ Have you ever wondered what it takes to design a distributed data processing sol
     </tr>
     <tr>
         <td>10:00 - 10:45</td>
-        <td><b>Storage in Cassandra</b>
+        <td><b><a href="https://github.com/DataStax-Academy/cassandra-for-data-engineers/wiki/Storage-in-Cassandra">Storage in Cassandra</a></b>
             <ul> 
-                <li><a href="#" target="_blank">Slidedeck</a></li>
-                <li><a href="#" target="_blank">Lab 1: Database Initialization</a></li>
-                <li><a href="#" target="_blank">Lab 2: User Interface</a></li>
+                <li><a href="https://github.com/DataStax-Academy/cassandra-for-data-engineers/blob/main/courses/2%20-%20Storage%20in%20Cassandra.pdf" target="_blank">Slidedeck</a></li>
+                <li><a href="https://github.com/DataStax-Academy/cassandra-for-data-engineers/wiki/Storage-in-Cassandra#lab1---database-initialization" target="_blank">Lab 1: Database Initialization</a></li>
+                <li><a href="https://github.com/DataStax-Academy/cassandra-for-data-engineers/wiki/Storage-in-Cassandra#lab2---user-interface" target="_blank">Lab 2: User Interface</a></li>
             </ul>            
         </td>
     </tr>
