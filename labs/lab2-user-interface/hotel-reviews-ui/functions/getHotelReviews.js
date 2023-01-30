@@ -1,0 +1,44 @@
+const { getRestClient, requestWithRetry, wait } = require("./utils/astraRestClient");
+const qs = require("qs");
+
+exports.handler = async (event, context) => {
+
+  // Parsing parameters
+  var queryParameters = {};
+  qs.stringify(event.queryStringParameters).split("&").forEach(function(part) {
+    var item = part.split("=");
+    queryParameters[item[0]] = decodeURIComponent(item[1]);
+  });
+
+  const client = await getClient();
+  let res;
+  try {
+    res = await client.get('/api/rest/v2/keyspaces/' 
+        + process.env.ASTRA_DB_KEYSPACE 
+        + '/reviews_by_hotel?where='
+        + '\{"hotel_uid":\{"$eq":"' + queryParameters.uid + '"\}\}')
+    const locations = Object.keys(res.data).map((item) => res.data[item]);
+    return {
+      headers: '{Content-Type: application/json}',
+      statusCode: 200,
+      body: JSON.stringify(locations),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    };
+  } catch (e) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify(e),
+    };
+  }
+};
+
+async function getClient() {
+  let client = await getRestClient();
+  if (client === null) {
+    wait(1000)
+    return getClient()
+  }
+  return client
+}
