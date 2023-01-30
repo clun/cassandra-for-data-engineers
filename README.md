@@ -5,6 +5,7 @@
 [![Discord](https://img.shields.io/discord/685554030159593522)](https://discord.com/widget?id=685554030159593522&theme=dark)
 
 ⏲️ **Duration :** 8 hours
+
 🎓 **Level** Beginner to Intermediate
 
 ## 📋 Table of contents
@@ -16,12 +17,14 @@
     </tr>
     <tr>
         <td>08:30 - 09:00</td>
-        <td>Keynote and House-Keeping</td>
+        <td>Keynote and HouseKeeping</td>
     </tr>
     <tr>
         <td>09:00 - 09:45</td>
-        <td>
-            <a href="#" target="_blank">Solution Architecture</a>
+        <td><b>Solution Architecture</b>
+            <ul> 
+                <li><a href="#" target="_blank">Slidedeck</a></li>
+           </ul>
         </td>
     </tr>
     <tr>
@@ -30,8 +33,9 @@
     </tr>
     <tr>
         <td>10:00 - 10:45</td>
-        <td> <a href="#" target="_blank">Storage in Cassandra</a>
+        <td><b>Storage in Cassandra</b>
             <ul> 
+                <li><a href="#" target="_blank">Slidedeck</a></li>
                 <li><a href="#" target="_blank">Lab 1: Database Initialization</a></li>
                 <li><a href="#" target="_blank">Lab 2: User Interface</a></li>
             </ul>            
